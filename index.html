@@ -522,19 +522,19 @@
         
         <button id="closeAdminBtn" style="position: absolute; top: 15px; left: 15px; background: none; border: none; color: #aaa; font-size: 22px; cursor: pointer;">&times;</button>
         
-        <!-- واجهة تسجيل الدخول بكلمة السر -->
-        <div id="adminAuthBox" style="text-align: center; padding: 20px 10px;">
-            <i class="fa-solid fa-user-shield" style="font-size: 45px; color: #c5a880; margin-bottom: 15px;"></i>
-            <h3 style="margin-top: 0; color: #fff; font-size: 20px;">تسجيل دخول المشرف</h3>
-            <p style="font-size: 13px; color: #888; margin-bottom: 20px;">أدخل كلمة السر الخاصة بإدارة المتجر لتتمكن من إضافة أو تعديل المنتجات.</p>
-            
-            <input type="password" id="adminPasswordInput" placeholder="أدخل كلمة السر (الافتراضية: 1234)" style="width: 100%; padding: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box; font-family: inherit; margin-bottom: 15px; text-align: center; font-size: 16px;">
-            
-            <button id="loginAdminBtn" style="width: 100%; background: #c5a880; color: #000; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 15px; font-family: inherit;">
-                دخول اللوحة
-            </button>
-            <p id="authErrorMsg" style="color: #ff5555; font-size: 13px; margin-top: 10px; display: none;">كلمة السر غير صحيحة!</p>
-        </div>
+    <!-- واجهة تسجيل الدخول بكلمة السر -->
+<div id="adminAuthBox" style="text-align: center; padding: 20px 10px;">
+    <i class="fa-solid fa-user-shield" style="font-size: 45px; color: #c5a880; margin-bottom: 15px;"></i>
+    <h3 style="margin-top: 0; color: #fff; font-size: 20px;">تسجيل دخول المشرف</h3>
+    <p style="font-size: 13px; color: #888; margin-bottom: 20px;">أدخل كلمة السر الخاصة بإدارة المتجر لتتمكن من إضافة أو تعديل المنتجات.</p>
+    
+    <input type="password" id="adminPasswordInput" placeholder="أدخل كلمة السر" style="width: 100%; padding: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box; font-family: inherit; margin-bottom: 15px; text-align: center; font-size: 16px;">
+    
+    <button id="loginAdminBtn" style="width: 100%; background: #c5a880; color: #000; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 15px; font-family: inherit;">
+        دخول اللوحة
+    </button>
+    <p id="authErrorMsg" style="color: #ff5555; font-size: 13px; margin-top: 10px; display: none;">كلمة السر غير صحيحة!</p>
+</div>
 
         <!-- محتوى لوحة التحكم (يظهر بعد إدخال كلمة السر) -->
         <div id="adminPanelContent" style="display: none;">
