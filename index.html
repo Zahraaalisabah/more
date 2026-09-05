@@ -27,6 +27,7 @@
                 <li><a href="#contact" class="nav-link">تواصل معنا</a></li>
             </ul>
         </nav>
+        
         <div class="header-icons">
             <a href="https://www.facebook.com/profile.php?id=61586421662632&locale=ar_AR" target="_blank" class="icon-btn" title="فيسبوك">
                 <i class="fa-brands fa-facebook-f"></i>
@@ -38,6 +39,11 @@
                 <i class="fa-brands fa-whatsapp"></i>
             </a>
         </div>
+        <!-- أيقونة السلة في الهيدر -->
+<div class="cart-icon-wrapper" id="cartToggle" title="سلة التسوق">
+    <i class="fa-solid fa-bag-shopping"></i>
+    <span id="cartCount" class="cart-badge">0</span>
+</div>
     </header>
 
     <!-- الواجهة الرئيسية (Hero Section) -->
@@ -93,303 +99,174 @@
         </div>
     </div>
 
-    <!-- قسم المنتجات -->
-    <section class="products-section" id="products">
+   <!-- قسم المنتجات -->
+<section class="products-section" id="products">
 
-        <h2 class="section-title">أفضل المنتجات</h2>
+    <h2 class="section-title">أفضل المنتجات</h2>
 
     <div class="products-grid">
 
-       
-
+        <!-- المنتج 1 -->
         <div class="product-card">
-
             <div class="product-img-wrapper">
-
-                <img src="images/protect1.png" alt="De'Longhi">
-
+                <img src="images/protect1.png" alt="Manual Coffee Grinder">
             </div>
-
             <div class="rating">
-
                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-
                 <span>( 128 )</span>
-
             </div>
-
             <div class="product-title">Manual Coffee Grinder</div>
-
-            <div class="product-subtitle">طاحونة القهوة اليدوية
-
-</div>
-
+            <div class="product-subtitle">طاحونة القهوة اليدوية</div>
+            <div class="product-price" style="text-align: center; font-weight: bold; color: #c5a880; margin: 8px 0; font-size: 16px;">25,000 د.ع</div>
             <div class="product-footer" style="justify-content: center;">
-
-                <a href="https://wa.me/9647868006090" target="_blank" class="btn-order" >
-
-                    <i class="fa-brands fa-whatsapp"></i> اطلب الآن عبر واتساب
-
-                </a>
-
+                <button onclick="addToCart('Manual Coffee Grinder', '25,000 د.ع', 'images/protect1.png', 'طاحونة القهوة اليدوية')" class="btn-order" style="background: #c5a880; color: #000; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
+                </button>
             </div>
-
         </div>
 
-
-
+        <!-- المنتج 2 -->
         <div class="product-card">
-
             <div class="product-img-wrapper">
-
-                <img src="images/product3.png" alt="Breville">
-
+                <img src="images/product3.png" alt="Multi-Styler Hair Tool">
             </div>
-
             <div class="rating">
-
                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-
                 <span>( 94 )</span>
-
             </div>
-
             <div class="product-title">Multi-Styler Hair Tool</div>
-
             <div class="product-subtitle">جهاز تصفيف الشعر متعدد الملحقات</div>
-
+            <div class="product-price" style="text-align: center; font-weight: bold; color: #c5a880; margin: 8px 0; font-size: 16px;">45,000 د.ع</div>
             <div class="product-footer" style="justify-content: center;">
-
-                <a href="https://wa.me/9647868006090" target="_blank" class="btn-order">
-
-                    <i class="fa-brands fa-whatsapp"></i> اطلب الآن عبر واتساب
-
-                </a>
-
+                <button onclick="addToCart('Multi-Styler Hair Tool', '45,000 د.ع', 'images/product3.png', 'جهاز تصفيف الشعر متعدد الملحقات')" class="btn-order" style="background: #c5a880; color: #000; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
+                </button>
             </div>
-
         </div>
 
-
-
+        <!-- المنتج 3 -->
         <div class="product-card">
-
             <div class="product-img-wrapper">
-
-                <img src="images/product5.png" alt="Gaggia">
-
+                <img src="images/product5.png" alt="Professional Hair Dryer">
             </div>
-
             <div class="rating">
-
                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-
                 <span>( 67 )</span>
-
             </div>
-
             <div class="product-title">Professional Hair Dryer</div>
-
             <div class="product-subtitle">مجفف الشعر الاحترافي</div>
-
+            <div class="product-price" style="text-align: center; font-weight: bold; color: #c5a880; margin: 8px 0; font-size: 16px;">35,000 د.ع</div>
             <div class="product-footer" style="justify-content: center;">
-
-                <a href="https://wa.me/9647868006090" target="_blank" class="btn-order">
-
-                    <i class="fa-brands fa-whatsapp"></i> اطلب الآن عبر واتساب
-
-                </a>
-
+                <button onclick="addToCart('Professional Hair Dryer', '35,000 د.ع', 'images/product5.png', 'مجفف الشعر الاحترافي')" class="btn-order" style="background: #c5a880; color: #000; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
+                </button>
             </div>
-
         </div>
 
-
-
-
-
+        <!-- المنتج 4 -->
         <div class="product-card">
-
             <div class="product-img-wrapper">
-
-                <img src="images/product7.png" alt="Rocket Espresso">
-
+                <img src="images/product7.png" alt="Multi-Styler Hair Tool Pro">
             </div>
-
             <div class="rating">
-
                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-
                 <span>( 82 )</span>
-
             </div>
-
-            <div class="product-title">Multi-Styler Hair Tool</div>
-
-            <div class="product-subtitle">جهاز تصفيف الشعر متعدد الملحقات</div>
-
+            <div class="product-title">Multi-Styler Hair Tool Pro</div>
+            <div class="product-subtitle">جهاز تصفيف الشعر الاحترافي</div>
+            <div class="product-price" style="text-align: center; font-weight: bold; color: #c5a880; margin: 8px 0; font-size: 16px;">50,000 د.ع</div>
             <div class="product-footer" style="justify-content: center;">
-
-                <a href="https://wa.me/9647868006090" target="_blank" class="btn-order" >
-
-                    <i class="fa-brands fa-whatsapp"></i> اطلب الآن عبر واتساب
-
-                </a>
-
+                <button onclick="addToCart('Multi-Styler Hair Tool Pro', '50,000 د.ع', 'images/product7.png', 'جهاز تصفيف الشعر الاحترافي')" class="btn-order" style="background: #c5a880; color: #000; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
+                </button>
             </div>
-
         </div>
 
-
-
+        <!-- المنتج 5 -->
         <div class="product-card">
-
             <div class="product-img-wrapper">
-
-                <img src="images/product8.png" alt="Lelit">
-
+                <img src="images/product8.png" alt="Coffee Gift Box">
             </div>
-
             <div class="rating">
-
                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
-
                 <span>( 81 )</span>
-
             </div>
-
             <div class="product-title">Coffee Gift Box</div>
-
             <div class="product-subtitle">باقة هدايا القهوة</div>
-
+            <div class="product-price" style="text-align: center; font-weight: bold; color: #c5a880; margin: 8px 0; font-size: 16px;">40,000 د.ع</div>
             <div class="product-footer" style="justify-content: center;">
-
-                <a href="https://wa.me/9647868006090" target="_blank" class="btn-order" >
-
-                    <i class="fa-brands fa-whatsapp"></i> اطلب الآن عبر واتساب
-
-                </a>
-
+                <button onclick="addToCart('Coffee Gift Box', '40,000 د.ع', 'images/product8.png', 'باقة هدايا القهوة')" class="btn-order" style="background: #c5a880; color: #000; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
+                </button>
             </div>
-
         </div>
 
-
-
+        <!-- المنتج 6 -->
         <div class="product-card">
-
             <div class="product-img-wrapper">
-
-                <img src="images/product9.png" alt="La Marzocco">
-
+                <img src="images/product9.png" alt="Italian Moka Coffee Set">
             </div>
-
             <div class="rating">
-
                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-
                 <span>( 85 )</span>
-
             </div>
-
             <div class="product-title">Italian Moka Coffee Set</div>
-
             <div class="product-subtitle">مجموعة الموكا الإيطالية</div>
-
+            <div class="product-price" style="text-align: center; font-weight: bold; color: #c5a880; margin: 8px 0; font-size: 16px;">30,000 د.ع</div>
             <div class="product-footer" style="justify-content: center;">
-
-                <a href="https://wa.me/9647868006090" target="_blank" class="btn-order" >
-
-                    <i class="fa-brands fa-whatsapp"></i> اطلب الآن عبر واتساب
-
-                </a>
-
+                <button onclick="addToCart('Italian Moka Coffee Set', '30,000 د.ع', 'images/product9.png', 'مجموعة الموكا الإيطالية')" class="btn-order" style="background: #c5a880; color: #000; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
+                </button>
             </div>
-
         </div>
 
-
-
+        <!-- المنتج 7 -->
         <div class="product-card">
-
             <div class="product-img-wrapper">
-
-                <img src="images/product10.png" alt="Sage">
-
+                <img src="images/product10.png" alt="Wooden Coffee Mill">
             </div>
-
             <div class="rating">
-
                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-
                 <span>( 112 )</span>
-
             </div>
-
             <div class="product-title">Wooden Coffee Mill</div>
-
             <div class="product-subtitle">طاحونة البن الخشبية</div>
-
+            <div class="product-price" style="text-align: center; font-weight: bold; color: #c5a880; margin: 8px 0; font-size: 16px;">28,000 د.ع</div>
             <div class="product-footer" style="justify-content: center;">
-
-                <a href="https://wa.me/9647868006090" target="_blank" class="btn-order">
-
-                    <i class="fa-brands fa-whatsapp"></i> اطلب الآن عبر واتساب
-
-                </a>
-
+                <button onclick="addToCart('Wooden Coffee Mill', '28,000 د.ع', 'images/product10.png', 'طاحونة البن الخشبية')" class="btn-order" style="background: #c5a880; color: #000; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
+                </button>
             </div>
-
         </div>
 
-
-
+        <!-- المنتج 8 -->
         <div class="product-card">
-
             <div class="product-img-wrapper">
-
-                <img src="images/product11.png" alt="Flair">
-
+                <img src="images/product11.png" alt="Coffee Brewing Kit">
             </div>
-
             <div class="rating">
-
                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
-
                 <span>( 77 )</span>
-
             </div>
-
             <div class="product-title">Coffee Brewing Kit</div>
-
             <div class="product-subtitle">عدة تحضير القهوة</div>
-
+            <div class="product-price" style="text-align: center; font-weight: bold; color: #c5a880; margin: 8px 0; font-size: 16px;">60,000 د.ع</div>
             <div class="product-footer" style="justify-content: center;">
-
-                <a href="https://wa.me/9647868006090" target="_blank" class="btn-order">
-
-                    <i class="fa-brands fa-whatsapp"></i> اطلب الآن عبر واتساب
-
-                </a>
-
+                <button onclick="addToCart('Coffee Brewing Kit', '60,000 د.ع', 'images/product11.png', 'عدة تحضير القهوة')" class="btn-order" style="background: #c5a880; color: #000; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
+                </button>
             </div>
-
         </div>
-
-
 
     </div>
 
-
-
-
-        <div class="view-all-products">
-            <a href="https://www.facebook.com/profile.php?id=61586421662632&locale=ar_AR" class="view-all-btn">
-                عرض جميع المنتجات
-                <i class="fa-solid fa-arrow-left"></i>
-            </a>
-        </div>
-    </section>
+    <div class="view-all-products">
+        <a href="https://www.facebook.com/profile.php?id=61586421662632&locale=ar_AR" target="_blank" class="view-all-btn">
+            عرض جميع المنتجات
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+    </div>
+</section>
 
     <!-- شريط التصنيفات السفلي -->
 <div class="categories-container fade-in">
@@ -593,7 +470,134 @@
     <button id="backToTop" title="العودة للأعلى">
         <i class="fa-solid fa-chevron-up"></i>
     </button>
+<!-- الخلفية المظلمة عند فتح السلة -->
+<div id="cartOverlay" class="cart-overlay"></div>
 
+<!-- النافذة الجانبية للسلة -->
+<aside id="cartModal" class="cart-sidebar" aria-label="سلة التسوق">
+    <!-- هيدر السلة -->
+    <div class="cart-header">
+        <div class="cart-header-title">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <h3>سلة التسوق</h3>
+            <span id="cartHeaderCount" class="cart-header-badge">0 منتجات</span>
+        </div>
+        <button id="closeCart" class="close-cart-btn" aria-label="إغلاق السلة">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <!-- قائمة المنتجات -->
+    <div id="cartItems" class="cart-body">
+        <!-- يتم توليد عناصر السلة ديناميكياً هنا -->
+    </div>
+
+    <!-- فوتر السلة والدفع -->
+    <div class="cart-footer">
+        <div class="cart-summary-row">
+            <span>المجموع الكلي:</span>
+            <span id="cartTotal" class="cart-total-price">0 د.ع</span>
+        </div>
+        <p class="cart-notice"><i class="fa-solid fa-truck-fast"></i> التوصيل مجاني لجميع محافظات العراق عند الطلب اليوم!</p>
+        <button id="sendCartToWhatsapp" class="btn-whatsapp-checkout">
+            <i class="fa-brands fa-whatsapp"></i> إتمام الطلب عبر الواتساب
+        </button>
+    </div>
+</aside>
+
+
+
+
+
+<!-- زر فتح لوحة التحكم (موجود بأسفل الصفحة) -->
+<div style="text-align: center; margin: 30px 0;">
+    <button id="openAdminBtn" style="background: rgba(197, 168, 128, 0.1); color: #c5a880; border: 1px dashed #c5a880; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: bold;">
+        <i class="fa-solid fa-lock"></i> لوحة إدارة المنتجات (خاص بالمشرف)
+    </button>
+</div>
+
+<!-- النافذة المنبثقة لإدارة المنتجات -->
+<div id="adminModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #181818; border: 1px solid #c5a880; border-radius: 12px; width: 100%; max-width: 500px; padding: 25px; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; max-height: 90vh; overflow-y: auto;">
+        
+        <button id="closeAdminBtn" style="position: absolute; top: 15px; left: 15px; background: none; border: none; color: #aaa; font-size: 22px; cursor: pointer;">&times;</button>
+        
+        <!-- واجهة تسجيل الدخول بكلمة السر -->
+        <div id="adminAuthBox" style="text-align: center; padding: 20px 10px;">
+            <i class="fa-solid fa-user-shield" style="font-size: 45px; color: #c5a880; margin-bottom: 15px;"></i>
+            <h3 style="margin-top: 0; color: #fff; font-size: 20px;">تسجيل دخول المشرف</h3>
+            <p style="font-size: 13px; color: #888; margin-bottom: 20px;">أدخل كلمة السر الخاصة بإدارة المتجر لتتمكن من إضافة أو تعديل المنتجات.</p>
+            
+            <input type="password" id="adminPasswordInput" placeholder="أدخل كلمة السر (الافتراضية: 1234)" style="width: 100%; padding: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box; font-family: inherit; margin-bottom: 15px; text-align: center; font-size: 16px;">
+            
+            <button id="loginAdminBtn" style="width: 100%; background: #c5a880; color: #000; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 15px; font-family: inherit;">
+                دخول اللوحة
+            </button>
+            <p id="authErrorMsg" style="color: #ff5555; font-size: 13px; margin-top: 10px; display: none;">كلمة السر غير صحيحة!</p>
+        </div>
+
+        <!-- محتوى لوحة التحكم (يظهر بعد إدخال كلمة السر) -->
+        <div id="adminPanelContent" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 10px;">
+                <h3 style="margin: 0; color: #c5a880; font-size: 18px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-plus-circle"></i> إضافة منتج جديد
+                </h3>
+                <button id="logoutAdminBtn" style="background: rgba(255,0,0,0.2); color: #ff6b6b; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-family: inherit;">
+                    <i class="fa-solid fa-right-from-bracket"></i> خروج
+                </button>
+            </div>
+
+            <form id="addProductForm" style="display: flex; flex-direction: column; gap: 15px;">
+                <div>
+                    <label style="display: block; font-size: 13px; margin-bottom: 5px; color: #ccc;">اسم المنتج:</label>
+                    <input type="text" id="adminTitle" placeholder="مثال: مطحنة قهوة يدوية" required style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box; font-family: inherit;">
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 13px; margin-bottom: 5px; color: #ccc;">الوصف أو الشرح البسيط:</label>
+                    <input type="text" id="adminSubtitle" placeholder="مثال: تروس سيراميك مع درجات تنعيم متعدده" required style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box; font-family: inherit;">
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <div style="flex: 1;">
+                        <label style="display: block; font-size: 13px; margin-bottom: 5px; color: #ccc;">السعر:</label>
+                        <input type="text" id="adminPrice" placeholder="مثال: 25,000 د.ع" required style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box; font-family: inherit;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="display: block; font-size: 13px; margin-bottom: 5px; color: #ccc;">التقييم:</label>
+                        <select id="adminRating" style="width: 100%; padding: 10px; background: #222; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box; font-family: inherit;">
+                            <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+                            <option value="4">⭐⭐⭐⭐ (4/5)</option>
+                            <option value="3">⭐⭐⭐ (3/5)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- خيار تحميل الصورة من الاستوديو/الموبايل -->
+                <div>
+                    <label style="display: block; font-size: 13px; margin-bottom: 5px; color: #ccc;">اختر صورة المنتج من الموبايل:</label>
+                    <input type="file" id="adminImageFile" accept="image/*" required style="width: 100%; padding: 8px; background: #222; border: 1px dashed #c5a880; color: #fff; border-radius: 6px; box-sizing: border-box; font-family: inherit; cursor: pointer;">
+                    <div id="imagePreviewContainer" style="margin-top: 10px; display: none; text-align: center;">
+                        <img id="imagePreview" src="" alt="معاينة الصورة" style="max-height: 120px; border-radius: 8px; border: 1px solid #444;">
+                    </div>
+                </div>
+
+                <button type="submit" style="background: #c5a880; color: #000; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 15px; margin-top: 10px; font-family: inherit;">
+                    <i class="fa-solid fa-check"></i> حفظ ونشر المنتج
+                </button>
+            </form>
+
+            <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
+
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <button id="resetProductsBtn" style="background: none; border: none; color: #ff5555; cursor: pointer; font-size: 12px; font-family: inherit;">
+                    <i class="fa-solid fa-rotate-left"></i> إرجاع المنتجات الافتراضية
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
     <!-- ربط ملف الـ JS الخارجي -->
     <script src="script.js"></script>
 </body>
