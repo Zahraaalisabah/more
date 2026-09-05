@@ -2,7 +2,7 @@
 // 1. إعداد الاتصال بـ Supabase
 // ==========================================
 const SUPABASE_URL = "https://maxrlrhelqgszjxhizgl.supabase.co";
-const SUPABASE_KEY = "sb_publishable_E71VdNUu5WqVdLlBt6Z8kg_snM-MUdj";الخاص بمشروعك هنا
+const SUPABASE_KEY = "sb_publishable_E71VdNUu5WqVdLlBt6Z8kg_snM-MUdj"; // الخاص بمشروعك هناالخاص بمشروعك هنا
 
 let supabase = null;
 if (window.supabase) {
