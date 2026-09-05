@@ -181,258 +181,143 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // ==========================================
-    // 2. تحميل المنتجات الديناميكية والتأثيرات
-    // ==========================================
-    fetch('products.json')
-        .then(response => response.json())
-        .then(products => {
-            const grid = document.querySelector('.products-grid');
-            if (grid && products.length > 0) {
-                grid.innerHTML = '';
-                products.forEach(prod => {
-                    const stars = Array(prod.rating || 5).fill('<i class="fa-solid fa-star"></i>').join('');
-                    const card = `
-                        <div class="product-card">
-                            <div class="product-img-wrapper">
-                                <img src="${prod.image}" alt="${prod.title}">
-                            </div>
-                            <div class="rating">
-                                ${stars}
-                                <span>( ${prod.reviews || 0} )</span>
-                            </div>
-                            <div class="product-title">${prod.title}</div>
-                            <div class="product-subtitle">${prod.subtitle || ''}</div>
-                            <div style="text-align: center; font-weight: bold; color: #c5a880; margin: 8px 0; font-size: 16px;">${prod.price}</div>
-                            <div class="product-footer" style="justify-content: center; gap: 8px;">
-                                <button onclick="addToCart('${prod.title}', '${prod.price}', '${prod.image}', '${prod.subtitle || ''}')" class="btn-order" style="background: #c5a880; color: #000; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; display: flex; align-items: center; gap: 8px;">
-                                    <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    grid.innerHTML += card;
-                });
-            }
-        })
-        .catch(() => console.log('يعمل بالمنتجات المحلية الضمنية'));
+   // ==========================================
+// 1. إعداد الاتصال بـ Supabase
+// ==========================================
+const SUPABASE_URL = "https://maxrlrhelqgszjxhizgl.supabase.co";
+const SUPABASE_KEY = "sb_publishable_E71VdNUu5WqVdLlBt6Z8kg_snM-MUdj"; // استبدل هذا النص بالمفتاح
 
-    // زر العودة للأعلى وتأثير الظهور
-    const backToTopBtn = document.getElementById("backToTop");
-    if (backToTopBtn) {
-        window.addEventListener("scroll", function () {
-            backToTopBtn.style.display = window.scrollY > 400 ? "block" : "none";
-        });
-        backToTopBtn.addEventListener("click", function () {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        });
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ==========================================
+// 2. دالة إضافة ونشر المنتج الجديد
+// ==========================================
+document.getElementById("addProductForm")?.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const title = document.getElementById("adminTitle").value;
+    const subtitle = document.getElementById("adminSubtitle").value;
+    const price = document.getElementById("adminPrice").value;
+    const rating = document.getElementById("adminRating").value;
+    const fileInput = document.getElementById("adminImageFile");
+    const submitBtn = e.target.querySelector("button[type='submit']");
+
+    if (!fileInput.files[0]) {
+        alert("يرجى اختيار صورة للمنتج");
+        return;
     }
 
-    // تشغيل السلة لأول مرة عند التحميل
-    updateCartUI();
+    const file = fileInput.files[0];
+    // تنظيف اسم الملف وإضافة طابع زمني لتجنب تكرار أسماء الصور
+    const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+
+    // تغيير حالة الزر أثناء الرفع
+    submitBtn.disabled = true;
+    submitBtn.innerText = "جاري رفع الصورة والمنتج...";
+
+    try {
+        // أ) رفع الصورة إلى حاوية Storage
+        const { data: imgData, error: imgError } = await supabase.storage
+            .from('products')
+            .upload(fileName, file);
+
+        if (imgError) throw imgError;
+
+        // ب) الحصول على الرابط العام المباشر للصورة
+        const { data: urlData } = supabase.storage
+            .from('products')
+            .getPublicUrl(fileName);
+
+        const imageUrl = urlData.publicUrl;
+
+        // ج) حفظ تفاصيل المنتج في جدول قاعدة البيانات
+        const { error: dbError } = await supabase
+            .from('products')
+            .insert([
+                { 
+                    title: title, 
+                    subtitle: subtitle, 
+                    price: price, 
+                    rating: rating, 
+                    image: imageUrl 
+                }
+            ]);
+
+        if (dbError) throw dbError;
+
+        alert("تمت إضافة المنتج بنجاح وظهر لجميع الزوار!");
+        
+        // إعادة إعادة تعيين النموذج وإغلاق النافذة
+        document.getElementById("addProductForm").reset();
+        const modal = document.getElementById("adminModal");
+        if (modal) modal.style.display = "none";
+
+        // إعادة تحميل المنتجات فوراً في الصفحة
+        loadSupabaseProducts();
+
+    } catch (error) {
+        console.error("حدث خطأ أثناء الإضافة:", error);
+        alert("فشل رفع المنتج: " + error.message);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> حفظ ونشر المنتج';
+    }
 });
 
-
-
-
-
-
-
 // ==========================================
-// لوحة التحكم المتقدمة (رفع الصور + كلمة السر)
+// 3. دالة جلب المنتجات وعرضها للزوار تلقائياً
 // ==========================================
+async function loadSupabaseProducts() {
+    const productsGrid = document.querySelector(".products-grid") || document.querySelector(".products-container");
+    if (!productsGrid) return;
 
-// كلمة السر الافتراضية للوحة التحكم (يمكن تغييرها هنا)
-const ADMIN_PASSWORD = "1234";
+    try {
+        // جلب جميع المنتجات مرتبة من الأحدث إلى الأقدم
+        const { data: products, error } = await supabase
+            .from('products')
+            .select('*')
+            .order('created_at', { ascending: false });
 
-// حالة تسجيل الدخول للمشرف
-let isAdminLoggedIn = false;
+        if (error) throw error;
 
-// القائمة الافتراضية للمنتجات
-const defaultProducts = [
-    { title: "Manual Coffee Grinder", subtitle: "طاحونة القهوة اليدوية", price: "25,000 د.ع", image: "images/protect1.png", rating: 5, reviews: 128 },
-    { title: "Multi-Styler Hair Tool", subtitle: "جهاز تصفيف الشعر متعدد الملحقات", price: "45,000 د.ع", image: "images/product3.png", rating: 5, reviews: 94 },
-    { title: "Professional Hair Dryer", subtitle: "مجفف الشعر الاحترافي", price: "35,000 د.ع", image: "images/product5.png", rating: 5, reviews: 67 },
-    { title: "Multi-Styler Hair Tool Pro", subtitle: "جهاز تصفيف الشعر الاحترافي", price: "50,000 د.ع", image: "images/product7.png", rating: 5, reviews: 82 },
-    { title: "Coffee Gift Box", subtitle: "باقة هدايا القهوة", price: "40,000 د.ع", image: "images/product8.png", rating: 4, reviews: 81 },
-    { title: "Italian Moka Coffee Set", subtitle: "مجموعة الموكا الإيطالية", price: "30,000 د.ع", image: "images/product9.png", rating: 5, reviews: 85 },
-    { title: "Wooden Coffee Mill", subtitle: "طاحونة البن الخشبية", price: "28,000 د.ع", image: "images/product10.png", rating: 5, reviews: 112 },
-    { title: "Coffee Brewing Kit", subtitle: "عدة تحضير القهوة", price: "60,000 د.ع", image: "images/product11.png", rating: 4, reviews: 77 }
-];
+        products.forEach(product => {
+            // تجنب تكرار رسم الكارت إذا كان معروضاً سابقاً
+            if (document.getElementById(`prod-${product.id}`)) return;
 
-function getStoredProducts() {
-    const saved = localStorage.getItem("more_store_products");
-    return saved ? JSON.parse(saved) : defaultProducts;
-}
+            const productCard = document.createElement("div");
+            productCard.className = "product-card";
+            productCard.id = `prod-${product.id}`;
 
-// عرض المنتجات في المتجر
-function renderProductsGrid() {
-    const grid = document.querySelector('.products-grid');
-    if (!grid) return;
+            // إنشاء نجوم التقييم بناءً على العدد المخزن
+            let starsHTML = '';
+            const ratingCount = parseInt(product.rating) || 5;
+            for (let i = 0; i < ratingCount; i++) {
+                starsHTML += '<i class="fa-solid fa-star"></i>';
+            }
 
-    const products = getStoredProducts();
-    grid.innerHTML = '';
-
-    products.forEach((prod, index) => {
-        const stars = Array(parseInt(prod.rating) || 5).fill('<i class="fa-solid fa-star"></i>').join('');
-        
-        // يظهر زر الحذف فقط إذا كان المشرف مسجلاً دخوله
-        const deleteBtnHtml = isAdminLoggedIn ? 
-            `<button onclick="deleteProduct(${index})" title="حذف المنتج" style="background: rgba(255,0,0,0.15); color: #ff5555; border: none; padding: 10px; border-radius: 6px; cursor: pointer;"><i class="fa-solid fa-trash"></i></button>` : '';
-
-        const card = `
-            <div class="product-card">
+            productCard.innerHTML = `
                 <div class="product-img-wrapper">
-                    <img src="${prod.image}" alt="${prod.title}" onerror="this.src='images/logo.png'">
+                    <img src="${product.image}" alt="${product.title}">
                 </div>
                 <div class="rating">
-                    ${stars}
-                    <span>( ${prod.reviews || 12} )</span>
+                    ${starsHTML}
                 </div>
-                <div class="product-title">${prod.title}</div>
-                <div class="product-subtitle">${prod.subtitle || ''}</div>
-                <div style="text-align: center; font-weight: bold; color: #c5a880; margin: 8px 0; font-size: 16px;">${prod.price}</div>
-                <div class="product-footer" style="justify-content: center; gap: 8px;">
-                    <button onclick="addToCart('${prod.title}', '${prod.price}', '${prod.image}', '${prod.subtitle || ''}')" class="btn-order" style="background: #c5a880; color: #000; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; display: flex; align-items: center; gap: 8px;">
+                <div class="product-title">${product.title}</div>
+                <div class="product-subtitle">${product.subtitle}</div>
+                <div class="product-price" style="text-align: center; font-weight: bold; color: #c5a880; margin: 8px 0; font-size: 16px;">${product.price}</div>
+                <div class="product-footer" style="justify-content: center;">
+                    <button onclick="addToCart('${product.title}', '${product.price}', '${product.image}', '${product.subtitle}')" class="btn-order" style="background: #c5a880; color: #000; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
                     </button>
-                    ${deleteBtnHtml}
                 </div>
-            </div>
-        `;
-        grid.innerHTML += card;
-    });
+            `;
+
+            productsGrid.appendChild(productCard);
+        });
+    } catch (err) {
+        console.error("خطأ أثناء جلب المنتجات من Supabase:", err);
+    }
 }
 
-// إعداد أحداث لوحة التحكم عند فتح الصفحة
-document.addEventListener("DOMContentLoaded", function () {
-    renderProductsGrid();
-
-    const openAdminBtn = document.getElementById("openAdminBtn");
-    const closeAdminBtn = document.getElementById("closeAdminBtn");
-    const adminModal = document.getElementById("adminModal");
-    const adminAuthBox = document.getElementById("adminAuthBox");
-    const adminPanelContent = document.getElementById("adminPanelContent");
-    const loginAdminBtn = document.getElementById("loginAdminBtn");
-    const logoutAdminBtn = document.getElementById("logoutAdminBtn");
-    const adminPasswordInput = document.getElementById("adminPasswordInput");
-    const authErrorMsg = document.getElementById("authErrorMsg");
-    
-    const adminImageFile = document.getElementById("adminImageFile");
-    const imagePreviewContainer = document.getElementById("imagePreviewContainer");
-    const imagePreview = document.getElementById("imagePreview");
-    let base64ImageString = "";
-
-    // فتح وإغلاق المودال
-    if (openAdminBtn) {
-        openAdminBtn.addEventListener("click", () => {
-            adminModal.style.display = "flex";
-            if (!isAdminLoggedIn) {
-                adminAuthBox.style.display = "block";
-                adminPanelContent.style.display = "none";
-            }
-        });
-    }
-
-    if (closeAdminBtn) closeAdminBtn.addEventListener("click", () => adminModal.style.display = "none");
-
-    // التحقق من كلمة السر
-    if (loginAdminBtn) {
-        loginAdminBtn.addEventListener("click", function () {
-            if (adminPasswordInput.value === ADMIN_PASSWORD) {
-                isAdminLoggedIn = true;
-                adminAuthBox.style.display = "none";
-                adminPanelContent.style.display = "block";
-                authErrorMsg.style.display = "none";
-                adminPasswordInput.value = "";
-                renderProductsGrid(); // إعادة التحديث لإظهار أزرار الحذف للمشرف
-            } else {
-                authErrorMsg.style.display = "block";
-            }
-        });
-    }
-
-    // تسجيل الخروج
-    if (logoutAdminBtn) {
-        logoutAdminBtn.addEventListener("click", function () {
-            isAdminLoggedIn = false;
-            adminAuthBox.style.display = "block";
-            adminPanelContent.style.display = "none";
-            renderProductsGrid();
-            adminModal.style.display = "none";
-        });
-    }
-
-    // معالجة اختيار صورة من الاستوديو/الموبايل
-    if (adminImageFile) {
-        adminImageFile.addEventListener("change", function (e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    base64ImageString = event.target.result;
-                    imagePreview.src = base64ImageString;
-                    imagePreviewContainer.style.display = "block";
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-
-    // إضافة المنتج عند إرسال النماذج
-    const addProductForm = document.getElementById("addProductForm");
-    if (addProductForm) {
-        addProductForm.addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            if (!base64ImageString) {
-                alert("يرجى اختيار صورة للمنتج من جهازك أولاً");
-                return;
-            }
-
-            const newProduct = {
-                title: document.getElementById("adminTitle").value.trim(),
-                subtitle: document.getElementById("adminSubtitle").value.trim(),
-                price: document.getElementById("adminPrice").value.trim(),
-                rating: parseInt(document.getElementById("adminRating").value) || 5,
-                image: base64ImageString, // حفظ الصورة المشفرة
-                reviews: Math.floor(Math.random() * 30) + 10
-            };
-
-            const products = getStoredProducts();
-            products.unshift(newProduct);
-
-            localStorage.setItem("more_store_products", JSON.stringify(products));
-            renderProductsGrid();
-
-            // إعادة ضبط النموذج
-            addProductForm.reset();
-            imagePreviewContainer.style.display = "none";
-            base64ImageString = "";
-            adminModal.style.display = "none";
-            alert("تم رفع الصورة وإضافة المنتج للمتجر بنجاح! 🎉");
-        });
-    }
-
-    // إعادة القائمة الافتراضية
-    const resetProductsBtn = document.getElementById("resetProductsBtn");
-    if (resetProductsBtn) {
-        resetProductsBtn.addEventListener("click", function () {
-            if (confirm("هل تريد مسح المنتجات المضافة وإرجاع قائمة المتجر الافتراضية؟")) {
-                localStorage.removeItem("more_store_products");
-                renderProductsGrid();
-                adminModal.style.display = "none";
-            }
-        });
-    }
-});
-
-// حذف منتج (متاح فقط للمشرف)
-window.deleteProduct = function (index) {
-    if (confirm("هل تريد حذف هذا المنتج من المتجر؟")) {
-        const products = getStoredProducts();
-        products.splice(index, 1);
-        localStorage.setItem("more_store_products", JSON.stringify(products));
-        renderProductsGrid();
-    }
-};
+// تشغيل جلب البيانات فور تحميل الصفحة
+document.addEventListener("DOMContentLoaded", loadSupabaseProducts);
