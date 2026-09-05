@@ -2,8 +2,7 @@
 // 1. إعداد الاتصال بـ Supabase
 // ==========================================
 const SUPABASE_URL = "https://maxrlrhelqgszjxhizgl.supabase.co";
-// استخدم مفتاح anon public الخاص بمشروعك هنا
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1heHJscmhlbHFnc3pqeGhpemdscyIsInJvbGUiOiJhb24iLCJpYXQiOjE3MDkyMTU2MDAsImV4cCI6MjAyNDc5MTYwMH0.example"; 
+const SUPABASE_KEY = "sb_publishable_E71VdNUu5WqVdLlBt6Z8kg_snM-MUdj";الخاص بمشروعك هنا
 
 let supabase = null;
 if (window.supabase) {
@@ -303,8 +302,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 const { error: dbError } = await supabase
                     .from('products')
                     .insert([
-                        { title, subtitle, price, rating, image: imageUrl }
-                    ]);
+{
+    title,
+    subtitle,
+    price,
+    rating: parseInt(rating) || 5,
+    image_url: imageUrl,
+    is_active: true
+}                    ]);
 
                 if (dbError) throw dbError;
 
@@ -358,8 +363,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 productCard.innerHTML = `
                     <div class="product-img-wrapper">
-                        <img src="${product.image}" alt="${product.title}">
-                    </div>
+<img src="${product.image_url}" alt="${product.title}">
+</div>
                     <div class="rating">
                         ${starsHTML}
                     </div>
