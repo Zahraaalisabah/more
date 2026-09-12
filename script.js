@@ -1311,13 +1311,13 @@ async function loadSupabaseProducts() {
                     </button>
 
                     <!-- هنا يوضع زر الحذف بالضبط -->
-                    <button 
-                        onclick="deleteProduct(${product.id})" 
-                        class="btn-delete admin-only-btn"
-                        style="background:#e74c3c; color:#fff; border:none; padding:10px 14px; border-radius:6px; cursor:pointer; font-weight:bold; font-family:inherit; display:flex; align-items:center; gap:6px;"
-                    >
-                        <i class="fa-solid fa-trash"></i> حذف
-                    </button>
+                 <button 
+    onclick="deleteProduct(${product.id})" 
+    class="btn-delete" 
+    style="background:#e74c3c; color:#fff; border:none; padding:10px 14px; border-radius:6px; cursor:pointer; font-weight:bold; font-family:inherit; display:flex; align-items:center; gap:6px;"
+>
+    <i class="fa-solid fa-trash"></i> حذف
+</button>
                 </div>
             `;
 
