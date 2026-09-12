@@ -1291,7 +1291,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     } =
                         await supabaseClient
                             .storage
-                            .from("products")
+                            .from("more")
                             .upload(
                                 fileName,
                                 file
@@ -1316,7 +1316,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     } =
                         supabaseClient
                             .storage
-                            .from("products")
+                           .from("more")
                             .getPublicUrl(
                                 fileName
                             );
