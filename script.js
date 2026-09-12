@@ -1625,11 +1625,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         );
 
 
-                    const imageUrl =
-                        String(
-                            product.image_url ||
-                            ""
-                        );
+                const imageUrl =
+    String(
+        product.image ||
+        ""
+    );
 
 
                     // معالجة علامة '
