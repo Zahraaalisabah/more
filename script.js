@@ -1251,7 +1251,7 @@ if (addProductForm) {
 }
 
 // ==========================================
-// 8. جلب المنتجات من Supabase (عرض زر الحذف للأدمن فقط)
+// 8. جلب المنتجات من Supabase
 // ==========================================
 
 async function loadSupabaseProducts() {
@@ -1259,10 +1259,6 @@ async function loadSupabaseProducts() {
 
     const productsGrid = document.querySelector(".products-grid");
     if (!productsGrid) return;
-
-    // فحص ما إذا كان صاحب الموقع/الأدمن مسجّل الدخول أو لوحة الإدارة مفعلة
-    // (يمكنك تغيير هذا الشرط حسب المتغير الموجود لديك في الكود مثل isAdminLoggedIn أو فحص الكوكيز/الجلسة)
-    const isAdmin = typeof isAdminLoggedIn !== "undefined" ? isAdminLoggedIn : false;
 
     try {
         const { data: products, error } = await supabaseClient
@@ -1296,17 +1292,6 @@ async function loadSupabaseProducts() {
             const safeSubtitle = subtitle.replace(/'/g, "\\'");
             const safePrice = price.replace(/'/g, "\\'");
 
-            // إنشاء زر الحذف فقط إذا كان صاحب الموقع هو المتصفح
-            const deleteBtnHTML = isAdmin ? `
-                <button 
-                    onclick="deleteProduct(${product.id})" 
-                    class="btn-delete" 
-                    style="background:#e74c3c; color:#fff; border:none; padding:10px 14px; border-radius:6px; cursor:pointer; font-weight:bold; font-family:inherit; display:flex; align-items:center; gap:6px;"
-                >
-                    <i class="fa-solid fa-trash"></i> حذف
-                </button>
-            ` : '';
-
             productCard.innerHTML = `
                 <div class="product-img-wrapper">
                     <img src="${imageUrl}" alt="${title}">
@@ -1325,7 +1310,14 @@ async function loadSupabaseProducts() {
                         <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
                     </button>
 
-                    ${deleteBtnHTML}
+                    <!-- هنا يوضع زر الحذف بالضبط -->
+                    <button 
+                        onclick="deleteProduct(${product.id})" 
+                        class="btn-delete admin-only-btn"
+                        style="background:#e74c3c; color:#fff; border:none; padding:10px 14px; border-radius:6px; cursor:pointer; font-weight:bold; font-family:inherit; display:flex; align-items:center; gap:6px;"
+                    >
+                        <i class="fa-solid fa-trash"></i> حذف
+                    </button>
                 </div>
             `;
 
