@@ -1354,8 +1354,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                     image: imageUrl,
                                     
-                                    is_active:
-                                        true
 
                                 }
                             ]);
@@ -1489,23 +1487,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
 
-            const {
-                data: products,
-                error
-            } =
-                await supabaseClient
-                    .from("More")
-                    .select("*")
-                    .eq(
-                        "is_active",
-                        true
-                    )
-                    .order(
-                        "created_at",
-                        {
-                            ascending: false
-                        }
-                    );
+           const { data: products, error } = await supabaseClient
+    .from("More")
+    .select("*")
+    .order("created_at", { ascending: false });
 
 
             if (
