@@ -1334,7 +1334,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         error: dbError
                     } =
                         await supabaseClient
-                            .from("products")
+                            .from("More")
                             .insert([
                                 {
 
@@ -1352,9 +1352,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                             rating
                                         ) || 5,
 
-                                    image_url:
-                                        imageUrl,
-
+                                    image: imageUrl,
+                                    
                                     is_active:
                                         true
 
@@ -1495,7 +1494,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 error
             } =
                 await supabaseClient
-                    .from("products")
+                    .from("More")
                     .select("*")
                     .eq(
                         "is_active",
