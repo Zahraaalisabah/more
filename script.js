@@ -1251,7 +1251,7 @@ if (addProductForm) {
 }
 
 // ==========================================
-// 8. جلب المنتجات من Supabase
+// 8. جلب المنتجات من Supabase (مُعدّلة مع زر الحذف)
 // ==========================================
 
 async function loadSupabaseProducts() {
@@ -1300,13 +1300,22 @@ async function loadSupabaseProducts() {
                 <div class="product-title">${title}</div>
                 <div class="product-subtitle">${subtitle}</div>
                 <div class="product-price" style="text-align:center; font-weight:bold; color:#c5a880; margin:8px 0; font-size:16px;">${price}</div>
-                <div class="product-footer" style="justify-content:center;">
+                
+                <div class="product-footer" style="display:flex; justify-content:center; gap:8px;">
                     <button 
                         onclick="addToCart('${safeTitle}', '${safePrice}', '${imageUrl}', '${safeSubtitle}')" 
                         class="btn-order" 
-                        style="background:#c5a880; color:#000; border:none; padding:10px 18px; border-radius:6px; cursor:pointer; font-weight:bold; font-family:inherit; display:flex; align-items:center; gap:8px;"
+                        style="background:#c5a880; color:#000; border:none; padding:10px 14px; border-radius:6px; cursor:pointer; font-weight:bold; font-family:inherit; display:flex; align-items:center; gap:6px;"
                     >
                         <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
+                    </button>
+
+                    <button 
+                        onclick="deleteProduct(${product.id})" 
+                        class="btn-delete" 
+                        style="background:#e74c3c; color:#fff; border:none; padding:10px 14px; border-radius:6px; cursor:pointer; font-weight:bold; font-family:inherit; display:flex; align-items:center; gap:6px;"
+                    >
+                        <i class="fa-solid fa-trash"></i> حذف
                     </button>
                 </div>
             `;
@@ -1318,12 +1327,39 @@ async function loadSupabaseProducts() {
         console.error("❌ خطأ أثناء جلب المنتجات:", error);
     }
 }
-
     // ==========================================
     // 9. تحميل منتجات Supabase عند فتح الموقع
     // ==========================================
 
     loadSupabaseProducts();
 
-
 });
+// ==========================================
+// دالة حذف المنتج من Supabase
+// ==========================================
+async function deleteProduct(productId) {
+    if (!confirm("هل أنت تأكد من رغبتك في حذف هذا المنتج؟")) {
+        return;
+    }
+
+    try {
+        const { error } = await supabaseClient
+            .from("More")
+            .delete()
+            .eq("id", productId);
+
+        if (error) throw error;
+
+        alert("تم حذف المنتج بنجاح!");
+
+        // إزالة عنصر المنتج من الشاشة فوراً
+        const productCard = document.getElementById(`supabase-prod-${productId}`);
+        if (productCard) {
+            productCard.remove();
+        }
+
+    } catch (error) {
+        console.error("❌ خطأ أثناء حذف المنتج:", error);
+        alert("فشل حذف المنتج: " + (error.message || "خطأ غير معروف"));
+    }
+}
