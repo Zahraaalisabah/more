@@ -60,7 +60,15 @@ nav ul li a {
     border-radius: 6px;
     transition: all 0.3s ease;
 }
+/* إخفاء زر الحذف عن جميع الزوار افتراضياً */
+.btn-delete.admin-only-btn {
+    display: none !important;
+}
 
+/* إظهار زر الحذف فقط عندما يكون الموقع في وضع الأدمن */
+body.admin-mode .btn-delete.admin-only-btn {
+    display: inline-flex !important;
+}
 nav ul li a:hover, nav ul li a.active {
     color: var(--primary-gold);
     background-color: rgba(207, 168, 107, 0.08);
