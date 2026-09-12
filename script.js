@@ -1151,621 +1151,173 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    // ==========================================
-    // 7. إضافة منتج جديد إلى Supabase
-    // ==========================================
+   // ==========================================
+// 7. إضافة منتج جديد إلى Supabase
+// ==========================================
 
-    const addProductForm =
-        document.getElementById(
-            "addProductForm"
-        );
+const addProductForm = document.getElementById("addProductForm");
 
+if (addProductForm) {
+    addProductForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-    if (addProductForm) {
-
-        addProductForm.addEventListener(
-            "submit",
-            async function (e) {
-
-                e.preventDefault();
-
-
-                // التأكد من وجود Supabase
-                if (
-                    !supabaseClient
-                ) {
-
-                    alert(
-                        "لم يتم الاتصال بقاعدة البيانات.\nتأكد من تحميل مكتبة Supabase."
-                    );
-
-                    return;
-
-                }
-
-
-                const titleInput =
-                    document.getElementById(
-                        "adminTitle"
-                    );
-
-
-                const subtitleInput =
-                    document.getElementById(
-                        "adminSubtitle"
-                    );
-
-
-                const priceInput =
-                    document.getElementById(
-                        "adminPrice"
-                    );
-
-
-                const ratingInput =
-                    document.getElementById(
-                        "adminRating"
-                    );
-
-
-                const title =
-                    titleInput
-                        ? titleInput.value.trim()
-                        : "";
-
-
-                const subtitle =
-                    subtitleInput
-                        ? subtitleInput.value.trim()
-                        : "";
-
-
-                const price =
-                    priceInput
-                        ? priceInput.value.trim()
-                        : "";
-
-
-                const rating =
-                    ratingInput
-                        ? ratingInput.value
-                        : "5";
-
-
-                const submitBtn =
-                    e.target.querySelector(
-                        "button[type='submit']"
-                    );
-
-
-                // التأكد من اختيار الصورة
-                if (
-                    !fileInput ||
-                    !fileInput.files[0]
-                ) {
-
-                    alert(
-                        "يرجى اختيار صورة للمنتج"
-                    );
-
-                    return;
-
-                }
-
-
-                const file =
-                    fileInput.files[0];
-
-
-                const cleanFileName =
-                    file.name.replace(
-                        /[^a-zA-Z0-9.-]/g,
-                        "_"
-                    );
-
-
-                const fileName =
-                    `${Date.now()}_${cleanFileName}`;
-
-
-                if (submitBtn) {
-
-                    submitBtn.disabled =
-                        true;
-
-
-                    submitBtn.innerText =
-                        "جاري رفع الصورة والمنتج...";
-
-                }
-
-
-                try {
-
-                    // ==================================
-                    // رفع الصورة إلى Storage
-                    // ==================================
-
-                    const {
-                        error: imgError
-                    } =
-                        await supabaseClient
-                            .storage
-                            .from("more")
-                            .upload(
-                                fileName,
-                                file
-                            );
-
-
-                    if (
-                        imgError
-                    ) {
-
-                        throw imgError;
-
-                    }
-
-
-                    // ==================================
-                    // الحصول على رابط الصورة
-                    // ==================================
-
-                    const {
-                        data: urlData
-                    } =
-                        supabaseClient
-                            .storage
-                           .from("more")
-                            .getPublicUrl(
-                                fileName
-                            );
-
-
-                    const imageUrl =
-                        urlData.publicUrl;
-
-
-                    // ==================================
-                    // حفظ المنتج داخل جدول products
-                    // ==================================
-
-                    const {
-                        error: dbError
-                    } =
-                        await supabaseClient
-                            .from("More")
-                            .insert([
-                                {
-
-                                    title:
-                                        title,
-
-                                    subtitle:
-                                        subtitle,
-
-                                    price:
-                                        price,
-
-                                    rating:
-                                        parseInt(
-                                            rating
-                                        ) || 5,
-
-                                    image: imageUrl,
-                                    
-
-                                }
-                            ]);
-
-
-                    if (
-                        dbError
-                    ) {
-
-                        throw dbError;
-
-                    }
-
-
-                    // ==================================
-                    // نجاح
-                    // ==================================
-
-                    alert(
-                        "تمت إضافة المنتج بنجاح وظهر لجميع الزوار!"
-                    );
-
-
-                    // تفريغ الفورم
-                    addProductForm.reset();
-
-
-                    // إخفاء المعاينة
-                    if (
-                        imagePreviewContainer
-                    ) {
-
-                        imagePreviewContainer.style.display =
-                            "none";
-
-                    }
-
-
-                    // إغلاق لوحة التحكم
-                    if (
-                        adminModal
-                    ) {
-
-                        adminModal.style.display =
-                            "none";
-
-                    }
-
-
-                    // تحميل المنتجات من جديد
-                    loadSupabaseProducts();
-
-
-                } catch (error) {
-
-                    console.error(
-                        "❌ Supabase error:",
-                        error
-                    );
-
-
-                    alert(
-                        "فشل رفع المنتج:\n\n" +
-                        (
-                            error.message ||
-                            error.error_description ||
-                            "خطأ غير معروف"
-                        )
-                    );
-
-
-                } finally {
-
-                    if (
-                        submitBtn
-                    ) {
-
-                        submitBtn.disabled =
-                            false;
-
-
-                        submitBtn.innerHTML =
-                            '<i class="fa-solid fa-check"></i> حفظ ونشر المنتج';
-
-                    }
-
-                }
-
-            }
-        );
-
-    }
-
-
-    // ==========================================
-    // 8. جلب المنتجات من Supabase
-    // ==========================================
-
-    async function loadSupabaseProducts() {
-
-        // إذا Supabase غير متصل
-        // لا نسوي أي تغيير بالموقع
-
-        if (
-            !supabaseClient
-        ) {
-
-            console.warn(
-                "⚠️ Supabase غير متصل - المنتجات الأصلية ستبقى كما هي."
-            );
-
+        if (!supabaseClient) {
+            alert("لم يتم الاتصال بقاعدة البيانات.\nتأكد من تحميل مكتبة Supabase.");
             return;
-
         }
 
+        const titleInput = document.getElementById("adminTitle");
+        const subtitleInput = document.getElementById("adminSubtitle");
+        const priceInput = document.getElementById("adminPrice");
+        const ratingInput = document.getElementById("adminRating");
 
-        const productsGrid =
-            document.querySelector(
-                ".products-grid"
-            );
+        const title = titleInput ? titleInput.value.trim() : "";
+        const subtitle = subtitleInput ? subtitleInput.value.trim() : "";
+        const price = priceInput ? priceInput.value.trim() : "";
+        const rating = ratingInput ? ratingInput.value : "5";
+        const submitBtn = e.target.querySelector("button[type='submit']");
 
-
-        if (
-            !productsGrid
-        ) {
-
+        if (!fileInput || !fileInput.files[0]) {
+            alert("يرجى اختيار صورة للمنتج");
             return;
-
         }
 
+        const file = fileInput.files[0];
+        const cleanFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+        const fileName = `${Date.now()}_${cleanFileName}`;
+
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerText = "جاري رفع الصورة والمنتج...";
+        }
 
         try {
+            // رفع الصورة
+            const { error: imgError } = await supabaseClient
+                .storage
+                .from("more")
+                .upload(fileName, file);
 
-           const { data: products, error } = await supabaseClient
-    .from("More")
-    .select("*")
-    .order("created_at", { ascending: false });
+            if (imgError) throw imgError;
 
+            // رابط الصورة
+            const { data: urlData } = supabaseClient
+                .storage
+                .from("more")
+                .getPublicUrl(fileName);
 
-            if (
-                error
-            ) {
+            const imageUrl = urlData.publicUrl;
 
-                throw error;
+            // حفظ المنتج بجدول More
+            const { error: dbError } = await supabaseClient
+                .from("More")
+                .insert([
+                    {
+                        title: title,
+                        subtitle: subtitle,
+                        price: price,
+                        rating: rating,
+                        image: imageUrl
+                    }
+                ]);
 
+            if (dbError) throw dbError;
+
+            alert("تمت إضافة المنتج بنجاح وظهر لجميع الزوار!");
+
+            addProductForm.reset();
+
+            if (imagePreviewContainer) {
+                imagePreviewContainer.style.display = "none";
             }
 
-
-            if (
-                !products ||
-                products.length === 0
-            ) {
-
-                console.log(
-                    "ℹ️ لا توجد منتجات في Supabase حالياً."
-                );
-
-                return;
-
+            if (adminModal) {
+                adminModal.style.display = "none";
             }
 
-
-            // ==========================================
-            // إضافة المنتجات الجديدة بدون حذف الأصلية
-            // ==========================================
-
-            products.forEach(
-                function (product) {
-
-                    // منع التكرار
-                    const existingProduct =
-                        document.getElementById(
-                            `supabase-prod-${product.id}`
-                        );
-
-
-                    if (
-                        existingProduct
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    const productCard =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    productCard.className =
-                        "product-card";
-
-
-                    productCard.id =
-                        `supabase-prod-${product.id}`;
-
-
-                    // ==================================
-                    // النجوم
-                    // ==================================
-
-                    let starsHTML =
-                        "";
-
-
-                    const ratingCount =
-                        Math.min(
-                            5,
-                            Math.max(
-                                1,
-                                parseInt(
-                                    product.rating
-                                ) || 5
-                            )
-                        );
-
-
-                    for (
-                        let i = 0;
-                        i < ratingCount;
-                        i++
-                    ) {
-
-                        starsHTML +=
-                            '<i class="fa-solid fa-star"></i>';
-
-                    }
-
-
-                    // ==================================
-                    // حماية النصوص
-                    // ==================================
-
-                    const title =
-                        String(
-                            product.title ||
-                            ""
-                        );
-
-
-                    const subtitle =
-                        String(
-                            product.subtitle ||
-                            ""
-                        );
-
-
-                    const price =
-                        String(
-                            product.price ||
-                            ""
-                        );
-
-
-                const imageUrl =
-    String(
-        product.image ||
-        ""
-    );
-
-
-                    // معالجة علامة '
-                    const safeTitle =
-                        title.replace(
-                            /'/g,
-                            "\\'"
-                        );
-
-
-                    const safeSubtitle =
-                        subtitle.replace(
-                            /'/g,
-                            "\\'"
-                        );
-
-
-                    const safePrice =
-                        price.replace(
-                            /'/g,
-                            "\\'"
-                        );
-
-
-                    // ==================================
-                    // إنشاء كارت المنتج
-                    // ==================================
-
-                    productCard.innerHTML = `
-
-                        <div class="product-img-wrapper">
-
-                            <img
-                                src="${imageUrl}"
-                                alt="${title}"
-                            >
-
-                        </div>
-
-
-                        <div class="rating">
-
-                            ${starsHTML}
-
-                        </div>
-
-
-                        <div class="product-title">
-
-                            ${title}
-
-                        </div>
-
-
-                        <div class="product-subtitle">
-
-                            ${subtitle}
-
-                        </div>
-
-
-                        <div
-                            class="product-price"
-                            style="
-                                text-align:center;
-                                font-weight:bold;
-                                color:#c5a880;
-                                margin:8px 0;
-                                font-size:16px;
-                            "
-                        >
-
-                            ${price}
-
-                        </div>
-
-
-                        <div
-                            class="product-footer"
-                            style="
-                                justify-content:center;
-                            "
-                        >
-
-                            <button
-
-                                onclick="addToCart(
-                                    '${safeTitle}',
-                                    '${safePrice}',
-                                    '${imageUrl}',
-                                    '${safeSubtitle}'
-                                )"
-
-                                class="btn-order"
-
-                                style="
-                                    background:#c5a880;
-                                    color:#000;
-                                    border:none;
-                                    padding:10px 18px;
-                                    border-radius:6px;
-                                    cursor:pointer;
-                                    font-weight:bold;
-                                    font-family:inherit;
-                                    display:flex;
-                                    align-items:center;
-                                    gap:8px;
-                                "
-                            >
-
-                                <i
-                                    class="fa-solid fa-cart-plus"
-                                ></i>
-
-                                إضافة للسلة
-
-                            </button>
-
-                        </div>
-
-                    `;
-
-
-                    productsGrid.appendChild(
-                        productCard
-                    );
-
-                }
-            );
-
-
-            console.log(
-                `✅ تم تحميل ${products.length} منتج من Supabase`
-            );
-
+            // إعادة تحميل المنتجات
+            loadSupabaseProducts();
 
         } catch (error) {
-
-            console.error(
-                "❌ خطأ أثناء جلب المنتجات من Supabase:",
-                error
-            );
-
-            // مهم:
-            // لا نحذف المنتجات الأصلية
-            // ولا نوقف الموقع إذا Supabase فيه مشكلة
-
+            console.error("❌ Supabase error:", error);
+            alert("فشل رفع المنتج:\n\n" + (error.message || "خطأ غير معروف"));
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> حفظ ونشر المنتج';
+            }
         }
+    });
+}
 
+// ==========================================
+// 8. جلب المنتجات من Supabase
+// ==========================================
+
+async function loadSupabaseProducts() {
+    if (!supabaseClient) return;
+
+    const productsGrid = document.querySelector(".products-grid");
+    if (!productsGrid) return;
+
+    try {
+        const { data: products, error } = await supabaseClient
+            .from("More")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        if (!products || products.length === 0) return;
+
+        products.forEach(function (product) {
+            const existingProduct = document.getElementById(`supabase-prod-${product.id}`);
+            if (existingProduct) return;
+
+            const productCard = document.createElement("div");
+            productCard.className = "product-card";
+            productCard.id = `supabase-prod-${product.id}`;
+
+            let starsHTML = "";
+            const ratingCount = Math.min(5, Math.max(1, parseInt(product.rating) || 5));
+            for (let i = 0; i < ratingCount; i++) {
+                starsHTML += '<i class="fa-solid fa-star"></i>';
+            }
+
+            const title = String(product.title || "");
+            const subtitle = String(product.subtitle || "");
+            const price = String(product.price || "");
+            const imageUrl = String(product.image || "");
+
+            const safeTitle = title.replace(/'/g, "\\'");
+            const safeSubtitle = subtitle.replace(/'/g, "\\'");
+            const safePrice = price.replace(/'/g, "\\'");
+
+            productCard.innerHTML = `
+                <div class="product-img-wrapper">
+                    <img src="${imageUrl}" alt="${title}">
+                </div>
+                <div class="rating">${starsHTML}</div>
+                <div class="product-title">${title}</div>
+                <div class="product-subtitle">${subtitle}</div>
+                <div class="product-price" style="text-align:center; font-weight:bold; color:#c5a880; margin:8px 0; font-size:16px;">${price}</div>
+                <div class="product-footer" style="justify-content:center;">
+                    <button 
+                        onclick="addToCart('${safeTitle}', '${safePrice}', '${imageUrl}', '${safeSubtitle}')" 
+                        class="btn-order" 
+                        style="background:#c5a880; color:#000; border:none; padding:10px 18px; border-radius:6px; cursor:pointer; font-weight:bold; font-family:inherit; display:flex; align-items:center; gap:8px;"
+                    >
+                        <i class="fa-solid fa-cart-plus"></i> إضافة للسلة
+                    </button>
+                </div>
+            `;
+
+            productsGrid.prepend(productCard);
+        });
+
+    } catch (error) {
+        console.error("❌ خطأ أثناء جلب المنتجات:", error);
     }
-
+}
 
     // ==========================================
     // 9. تحميل منتجات Supabase عند فتح الموقع
